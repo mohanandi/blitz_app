@@ -82,8 +82,8 @@
                             <th class="text-center">Tanggal Expired Visa</th>
                             <th class="text-center">No RPTKA</th>
                             <th class="text-center">Jabatan</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center">Tanggal Input</th>
-                            <th class="text-center">Input By</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -114,8 +114,8 @@
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_expired']); ?></td>
                                         <td class="text-center"><?= $data_pengguna['id_rptka']; ?></td>
                                         <td class="text-center"><?= $data_pengguna['id_jabatan']; ?></td>
+                                        <td class="text-center"><?= $data_pengguna['status']; ?></td>
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
-                                        <td class="text-center"><?= $data_visa['input_by_id']; ?></td>
                                         <td class="text-center">
                                             <a href="<?= base_url('Data_Visa/spesifik_visa312/') . $data_pengguna['id_penghubung_visa312']; ?>" class="badge badge-success">Detail</a>
                                         </td>
@@ -158,8 +158,8 @@
                                     <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_expired']); ?></td>
                                     <td class="text-center"><?= $data_rptka['no_rptka']; ?></td>
                                     <td class="text-center"><?= $data_jabatan['jabatan']; ?></td>
+                                    <td class="text-center"><?= $data_pengguna['status']; ?></td>
                                     <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
-                                    <td class="text-center"><?= $data_visa['input_by_id']; ?></td>
                                     <td class="text-center">
                                         <ul class="list-inline m-0">
                                             <li class="list-inline-item">

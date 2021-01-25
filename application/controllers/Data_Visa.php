@@ -162,8 +162,9 @@ class Data_Visa extends CI_Controller
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         if ($this->form_validation->run() == FALSE) {
             $data['judul'] = 'Data Visa';
-            $data['data_pengguna_visa211'] = $this->Data_Visa_Model->getAllPenghubungVisa211();
-            $data['data_pengguna_visa312'] = $this->Data_Visa_Model->getAllPenghubungVisa312();
+            $id_pt = 'Semua Perusahaan';
+            $data['data_pengguna_visa211'] = $this->Data_Visa_Model->getAllPenghubungVisa211($id_pt);
+            $data['data_pengguna_visa312'] = $this->Data_Visa_Model->getAllPenghubungVisa312($id_pt);
             $data['subjudul_211'] = 'Visa Non-RPTKA';
             $data['subjudul_312'] = 'Visa (RPTKA)';
             $this->load->view('templates/header', $data);
@@ -176,27 +177,31 @@ class Data_Visa extends CI_Controller
             $id_pt = $this->input->post('nama_pt');
             $data['judul'] = 'Data Visa';
             if ($id_visa == 'All Visa') {
-                $data['data_pengguna_visa211'] = $this->Data_Visa_Model->getAllPenghubungVisa211();
-                $data['data_pengguna_visa312'] = $this->Data_Visa_Model->getAllPenghubungVisa312();
+                $data['data_pengguna_visa211'] = $this->Data_Visa_Model->getAllPenghubungVisa211($id_pt);
+                $data['data_pengguna_visa312'] = $this->Data_Visa_Model->getAllPenghubungVisa312($id_pt);
                 $data['subjudul_211'] = 'Visa Non-RPTKA';
                 $data['subjudul_312'] = 'Visa (RPTKA)';
+                $this->load->view('templates/header', $data);
+                $this->load->view('data_visa/visa_all', $data);
+                $this->load->view('templates/footer');
             } else {
-                $data['jenis_visa'] = $this->Data_Visa_Model->getJenisVisaById($id_visa);
-                if ($data['jenis_visa']['kategori_id'] == 1) {
-                    $data['subjudul_211'] = 'Visa Non-RPTKA';
-                    $data['subjudul_312'] = $data['jenis_visa']['visa'];
-                    $data['data_pengguna_visa211'] = null;
+                $data['jenis_visa_pilihan'] = $this->Data_Visa_Model->getJenisVisaById($id_visa);
+                if ($data['jenis_visa_pilihan']['kategori_id'] == 1) {
+                    $data['subjudul'] = $data['jenis_visa_pilihan']['visa'];
                     $data['data_pengguna_visa312'] = $this->Data_Visa_Model->getAllVisa312Filter($id_visa, $id_pt);
+                    $this->load->view('templates/header', $data);
+                    $this->load->view('data_visa/visa_all_filter312', $data);
+                    $this->load->view('templates/footer');
                 } else {
-                    $data['subjudul_211'] = $data['jenis_visa']['visa'];
-                    $data['subjudul_312'] = 'Visa (RPTKA)';
+                    $data['subjudul'] = $data['jenis_visa_pilihan']['visa'];
                     $data['data_pengguna_visa211'] = $this->Data_Visa_Model->getAllVisa211Filter($id_visa, $id_pt);
-                    $data['data_pengguna_visa312'] = null;
+                    var_dump($this->input->post());
+                    var_dump($data['data_pengguna_visa211']);
+                    $this->load->view('templates/header', $data);
+                    $this->load->view('data_visa/visa_all_filter211', $data);
+                    $this->load->view('templates/footer');
                 }
             }
-            $this->load->view('templates/header', $data);
-            $this->load->view('data_visa/visa_all', $data);
-            $this->load->view('templates/footer');
         }
     }
 

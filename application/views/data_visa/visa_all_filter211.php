@@ -13,26 +13,49 @@
                         <input name="dari" id="dari" placeholder="Filter Dari" value="<?= set_value('dari'); ?>" type="hidden" class=" form-control">
                         <input name="sampai" id="sampai" value="<?= set_value('sampai'); ?>" type="hidden" class="form-control">
                         <input name="id_pt" id="id_pt" value="<?= set_value('nama_pt'); ?>" type="hidden" class="form-control">
-                        <input name="id_visa" id="id_visa" value="<?= $data_jenis_visa['id']; ?>" type="hidden" class="form-control">
-                        <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Export <?= $data_jenis_visa['visa']; ?>"><i class="fa fa-download" aria-hidden="true"></i></button>
+                        <!-- <input name="id_visa" id="id_visa" value="<?= $data_jenis_visa['id']; ?>" type="hidden" class="form-control">
+                        <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Export <?= $data_jenis_visa['visa']; ?>"><i class="fa fa-download" aria-hidden="true"></i></button> -->
                     </form>
                 <?php endif; ?>
             </div>
             <div class="table-responsive" id="filter_box" style="padding: 20px;">
                 <form class="" action="" method="POST">
                     <div class="form-row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="exampleEmail11" class=""><b>Dari</b></label>
                                 <input name="dari" id="dari" placeholder="Filter Dari" value="<?= set_value('dari'); ?>" type="date" class=" form-control" required>
                                 <?= form_error('dari'); ?>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="examplePassword11" class=""><b>Sampai</b></label>
                                 <input name="sampai" id="sampai" value="<?= set_value('sampai'); ?>" type="date" class="form-control" required>
                                 <?= form_error('sampai'); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="examplePassword11" class=""><b>Jenis Visa</b></label>
+                                <select class="form-control" id="jenis_visa" name="jenis_visa">
+                                    <?php if (set_value('jenis_visa')) :
+                                        if (set_value('jenis_visa') == 'All Visa') : ?>
+                                            <option value="<?= set_value('jenis_visa'); ?>"> <?= set_value('jenis_visa'); ?></option>
+                                        <?php else :
+                                            $jenis_visa = $this->db->get_where('jenis_visa', ['id' => set_value('jenis_visa')])->row_array();
+                                        ?>
+                                            <option value="<?= set_value('jenis_visa'); ?>"> <?= $jenis_visa['visa']; ?></option>
+                                        <?php endif;
+                                    else : ?>
+                                        <option value="">Select Jenis Visa</option>
+                                    <?php endif; ?>
+                                    <option value="All Visa">All Visa</option>
+                                    <?php foreach ($data_jenis_visa as $visa) : ?>
+                                        <option value="<?= $visa['id']; ?>"><?= $visa['visa']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <?= form_error('jenis_visa'); ?>
                             </div>
                         </div>
                     </div>
@@ -68,11 +91,11 @@
     </div>
 </div>
 
+
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
             <div class="card-header">Data <?= $subjudul; ?>
-                <a href="<?= base_url('Data_Visa/filter_tka_visa211/'); ?><?= $data_jenis_visa['id']; ?>" type="button" class="btn-actions-pane-right mb-2 mr-2 btn btn-primary">Tambah Data <?= $subjudul; ?></a>
             </div>
             <div class="table-responsive" style="padding: 10px;">
                 <table class="align-middle mb-0 table table-borderless table-striped table-hover" id="example">
@@ -84,7 +107,6 @@
                             <th class="text-center">Nama Latin</th>
                             <th class="text-center">Tanggal Awal Visa</th>
                             <th class="text-center">Tanggal Expired Visa</th>
-                            <th class="text-center">Keterangan</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Tanggal Input</th>
                             <th class="text-center">Input By</th>
@@ -95,7 +117,7 @@
                         <?php
                         if (set_value('nama_pt')) :
                             $no = 1;
-                            foreach ($data_pengguna_visa as $visa) :
+                            foreach ($data_pengguna_visa211 as $visa) :
                                 $data_visa = $this->db->get_where('visa_211', ['id_penghubung' => $visa['id_penghubung_visa211']])->row_array();
                                 $this->db->select(array('id', 'nama_latin', 'passport', 'id_pt'));
                                 $this->db->from('tka');
@@ -123,17 +145,11 @@
                                         $query_input = $this->db->get();
                                         $data_input = $query_input->row_array();
                                         ?>
-                                        <td class="text-center"><?= $data_visa['ket']; ?></td>
                                         <td class="text-center"><?= $visa['status']; ?></td>
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
                                         <td class="text-center"><?= $data_input['nama']; ?></td>
                                         <td class="text-center">
-                                            <ul class="list-inline m-0">
-                                                <li class="list-inline-item">
-                                                    <a class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" href="<?= base_url('Data_Visa/spesifik_visa211/'); ?><?= $visa['id_penghubung_visa211']; ?>" title="Detail"><i class="fas fa-pencil-alt"></i></a>
-                                                    <button class="btn btn-danger btn-sm rounded-0 action-delete" type="button" data-toggle="tooltip" data-placement="top" data-href="<?= base_url('Data_Visa/delete_visa211/') . $visa['id_penghubung_visa211'] ?>" title="Delete"><i class="fa fa-trash"></i></button>
-                                                </li>
-                                            </ul>
+                                            <a href="<?= base_url('Data_Visa/spesifik_visa211/'); ?><?= $visa['id_penghubung_visa211']; ?>" class="badge badge-success">Detail</a>
                                         </td>
                                     </tr>
                                 <?php
@@ -145,7 +161,7 @@
                             endforeach;
                         else :
                             $no = 1;
-                            foreach ($data_pengguna_visa as $visa) :
+                            foreach ($data_pengguna_visa211 as $visa) :
                                 $data_visa = $this->db->get_where('visa_211', ['id_penghubung' => $visa['id_penghubung_visa211']])->row_array();
                                 $this->db->select(array('id', 'nama_latin', 'passport', 'id_pt'));
                                 $this->db->from('tka');
@@ -177,12 +193,7 @@
                                     <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
                                     <td class="text-center"><?= $data_input['nama']; ?></td>
                                     <td class="text-center">
-                                        <ul class="list-inline m-0">
-                                            <li class="list-inline-item">
-                                                <a class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" href="<?= base_url('Data_Visa/spesifik_visa211/'); ?><?= $visa['id_penghubung_visa211']; ?>" title="Detail"><i class="fas fa-pencil-alt"></i></a>
-                                                <button class="btn btn-danger btn-sm rounded-0 action-delete" type="button" data-toggle="tooltip" data-placement="top" data-href="<?= base_url('Data_Visa/delete_visa211/') . $visa['id_penghubung_visa211'] ?>" title="Delete"><i class="fa fa-trash"></i></button>
-                                            </li>
-                                        </ul>
+                                        <a href="<?= base_url('Data_Visa/spesifik_visa211/'); ?><?= $visa['id_penghubung_visa211']; ?>" class="badge badge-success">Detail</a>
                                     </td>
                                 </tr>
                         <?php $no++;
@@ -202,23 +213,5 @@
     });
     $('#filter').click(function() {
         $("#filter_box").toggle();
-    });
-</script>
-
-<script>
-    $('.action-delete').click(function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You Will delete this data !",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.value) {
-                window.location.href = $(this).data('href');
-            }
-        })
     });
 </script>

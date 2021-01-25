@@ -43,7 +43,7 @@
                                         if (set_value('jenis_visa') == 'All Visa') : ?>
                                             <option value="<?= set_value('jenis_visa'); ?>"> <?= set_value('jenis_visa'); ?></option>
                                         <?php else :
-                                            $jenis_visa = $thsis->db->get_where('jenis_visa', ['id' => set_value('jenis_visa')])->row_array();
+                                            $jenis_visa = $this->db->get_where('jenis_visa', ['id' => set_value('jenis_visa')])->row_array();
                                         ?>
                                             <option value="<?= set_value('jenis_visa'); ?>"> <?= $jenis_visa['visa']; ?></option>
                                         <?php endif;
@@ -91,6 +91,7 @@
     </div>
 </div>
 
+
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
@@ -106,7 +107,8 @@
                             <th class="text-center">Nama Latin</th>
                             <th class="text-center">Tanggal Awal Visa</th>
                             <th class="text-center">Tanggal Expired Visa</th>
-                            <th class="text-center">Keterangan</th>
+                            <th class="text-center">Jenis Visa</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center">Tanggal Input</th>
                             <th class="text-center">Input By</th>
                             <th class="text-center">Action</th>
@@ -128,6 +130,11 @@
                                 $this->db->where('id', $visa['id_pt']);
                                 $query_pt = $this->db->get();
                                 $data_pt = $query_pt->row_array();
+                                $this->db->select('visa');
+                                $this->db->from('jenis_visa');
+                                $this->db->where('id', $visa['id_jenis_visa']);
+                                $query_visa = $this->db->get();
+                                $pilihan_visa = $query_visa->row_array();
                                 if (($data_visa['tgl_input'] >= $dari) and ($data_visa['tgl_input'] <= $sampai)) {
                         ?>
                                     <tr>
@@ -144,7 +151,8 @@
                                         $query_input = $this->db->get();
                                         $data_input = $query_input->row_array();
                                         ?>
-                                        <td class="text-center"><?= $data_visa['ket']; ?></td>
+                                        <td class="text-center"><?= $pilihan_visa['visa']; ?></td>
+                                        <td class="text-center"><?= $visa['status']; ?></td>
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
                                         <td class="text-center"><?= $data_input['nama']; ?></td>
                                         <td class="text-center">
@@ -156,49 +164,47 @@
                                 } else {
                                 }
                                 ?>
-                                <?php
+                            <?php
                             endforeach;
                         else :
                             $no = 1;
-                            if ($data_pengguna_visa211 == null) {
-                            } else {
-                                foreach ($data_pengguna_visa211 as $visa) :
-                                    $data_visa = $this->db->get_where('visa_211', ['id_penghubung' => $visa['id_penghubung_visa211']])->row_array();
-                                    $this->db->select(array('id', 'nama_latin', 'passport', 'id_pt'));
-                                    $this->db->from('tka');
-                                    $this->db->where('id', $visa['id_tka']);
-                                    $query_tka = $this->db->get();
-                                    $data_tka = $query_tka->row_array();
-                                    $this->db->select('nama_pt');
-                                    $this->db->from('pt');
-                                    $this->db->where('id', $visa['id_pt']);
-                                    $query_pt = $this->db->get();
-                                    $data_pt = $query_pt->row_array();
-                                ?>
-                                    <tr>
-                                        <td class="text-center"><?= $no; ?></td>
-                                        <td class="text-center"><?= $data_pt['nama_pt']; ?></td>
-                                        <td class="text-center"><?= $data_tka['passport']; ?></td>
-                                        <td class="text-center"><?= $data_tka['nama_latin']; ?></td>
-                                        <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_awal']); ?></td>
-                                        <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_expired']); ?></td>
-                                        <?php
-                                        $this->db->select('nama');
-                                        $this->db->from('user');
-                                        $this->db->where('id', $data_visa['input_by_id']);
-                                        $query_input = $this->db->get();
-                                        $data_input = $query_input->row_array();
-                                        ?>
-                                        <td class="text-center"><?= $data_visa['ket']; ?></td>
-                                        <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
-                                        <td class="text-center"><?= $data_input['nama']; ?></td>
-                                        <td class="text-center">
-                                            <a href="<?= base_url('Data_Visa/spesifik_visa211/'); ?><?= $visa['id_penghubung_visa211']; ?>" class="badge badge-success">Detail</a>
-                                        </td>
-                                    </tr>
+                            foreach ($data_pengguna_visa211 as $visa) :
+                                $data_visa = $this->db->get_where('visa_211', ['id_penghubung' => $visa['id_penghubung_visa211']])->row_array();
+                                $this->db->select(array('id', 'nama_latin', 'passport', 'id_pt'));
+                                $this->db->from('tka');
+                                $this->db->where('id', $visa['id_tka']);
+                                $query_tka = $this->db->get();
+                                $data_tka = $query_tka->row_array();
+                                $this->db->select('nama_pt');
+                                $this->db->from('pt');
+                                $this->db->where('id', $visa['id_pt']);
+                                $query_pt = $this->db->get();
+                                $data_pt = $query_pt->row_array();
+                            ?>
+                                <tr>
+                                    <td class="text-center"><?= $no; ?></td>
+                                    <td class="text-center"><?= $data_pt['nama_pt']; ?></td>
+                                    <td class="text-center"><?= $data_tka['passport']; ?></td>
+                                    <td class="text-center"><?= $data_tka['nama_latin']; ?></td>
+                                    <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_awal']); ?></td>
+                                    <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_expired']); ?></td>
+                                    <?php
+                                    $this->db->select('nama');
+                                    $this->db->from('user');
+                                    $this->db->where('id', $data_visa['input_by_id']);
+                                    $query_input = $this->db->get();
+                                    $data_input = $query_input->row_array();
+                                    ?>
+                                    <td class="text-center"><?= $data_visa['ket']; ?></td>
+                                    <td class="text-center"><?= $visa['status']; ?></td>
+                                    <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
+                                    <td class="text-center"><?= $data_input['nama']; ?></td>
+                                    <td class="text-center">
+                                        <a href="<?= base_url('Data_Visa/spesifik_visa211/'); ?><?= $visa['id_penghubung_visa211']; ?>" class="badge badge-success">Detail</a>
+                                    </td>
+                                </tr>
                         <?php $no++;
-                                endforeach;
-                            }
+                            endforeach;
                         endif;
                         ?>
                     </tbody>
@@ -224,9 +230,9 @@
                             <th class="text-center">Tanggal Awal Visa</th>
                             <th class="text-center">Tanggal Expired Visa</th>
                             <th class="text-center">No RPTKA</th>
-                            <th class="text-center">Jabatan</th>
+                            <th class="text-center">Jenis Visa</th>
+                            <th class="text-center">Status</th>
                             <th class="text-center">Tanggal Input</th>
-                            <th class="text-center">Input By</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -246,11 +252,16 @@
                                 $this->db->where('id', $data_pengguna['id_pt']);
                                 $query_pt = $this->db->get();
                                 $data_pt = $query_pt->row_array();
-                                $this->db->select('nama');
-                                $this->db->from('user');
-                                $this->db->where('id', $data_visa['input_by_id']);
-                                $query_input = $this->db->get();
-                                $data_input = $query_input->row_array();
+                                $this->db->select('visa');
+                                $this->db->from('jenis_visa');
+                                $this->db->where('id', $data_pengguna['id_jenis_visa']);
+                                $query_visa = $this->db->get();
+                                $data_visa_jenis = $query_visa->row_array();
+                                $this->db->select('no_rptka');
+                                $this->db->from('rptka');
+                                $this->db->where('id', $data_pengguna['id_rptka']);
+                                $query_rptka = $this->db->get();
+                                $data_rptka = $query_rptka->row_array();
                                 if (($data_visa['tgl_input'] >= $dari) and ($data_visa['tgl_input'] <= $sampai)) {
                         ?>
                                     <tr>
@@ -260,10 +271,10 @@
                                         <td class="text-center"><?= $data_tka['nama_latin']; ?></td>
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_awal']); ?></td>
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_expired']); ?></td>
-                                        <td class="text-center"><?= $data_pengguna['id_rptka']; ?></td>
-                                        <td class="text-center"><?= $data_pengguna['id_jabatan']; ?></td>
+                                        <td class="text-center"><?= $data_rptka['no_rptka']; ?></td>
+                                        <td class="text-center"><?= $data_visa_jenis['visa']; ?></td>
+                                        <td class="text-center"><?= $data_pengguna['status']; ?></td>
                                         <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
-                                        <td class="text-center"><?= $data_input['nama']; ?></td>
                                         <td class="text-center">
                                             <a href="<?= base_url('Data_Visa/spesifik_visa312/') . $data_pengguna['id_penghubung_visa312']; ?>" class="badge badge-success">Detail</a>
                                         </td>
@@ -296,11 +307,11 @@
                                 $this->db->where('id_jabatan_rptka', $data_pengguna['id_jabatan']);
                                 $query_jabatan = $this->db->get();
                                 $data_jabatan = $query_jabatan->row_array();
-                                $this->db->select('nama');
-                                $this->db->from('user');
-                                $this->db->where('id', $data_visa['input_by_id']);
-                                $query_input = $this->db->get();
-                                $data_input = $query_input->row_array();
+                                $this->db->select('visa');
+                                $this->db->from('jenis_visa');
+                                $this->db->where('id', $data_pengguna['id_jenis_visa']);
+                                $query_visa = $this->db->get();
+                                $data_visa_jenis = $query_visa->row_array();
                                 ?>
                                 <tr>
                                     <td class="text-center"><?= $no; ?></td>
@@ -310,9 +321,9 @@
                                     <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_awal']); ?></td>
                                     <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_expired']); ?></td>
                                     <td class="text-center"><?= $data_rptka['no_rptka']; ?></td>
-                                    <td class="text-center"><?= $data_jabatan['jabatan']; ?></td>
-                                    <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
-                                    <td class="text-center"><?= $data_input['nama']; ?></td>
+                                    <td class="text-center"><?= $data_visa['visa']; ?></td>
+                                    <td class="text-center"><?= $data_pengguna['status']; ?></td>
+                                    <td class="text-center"><?= date('d-m-Y', $data_visa_jenis['tgl_input']); ?></td>
                                     <td class="text-center">
                                         <a href="<?= base_url('Data_Visa/spesifik_visa312/') . $data_pengguna['id_penghubung_visa312']; ?>" class="badge badge-success">Detail</a>
                                     </td>
@@ -326,7 +337,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function() {

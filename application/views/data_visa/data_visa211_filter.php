@@ -47,7 +47,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">No</th>
-                            <th class="text-center">Nama PT</th>
+                            <th class="text-center">Perusahaan</th>
                             <th class="text-center">No Passport</th>
                             <th class="text-center">Nama Latin</th>
                             <th class="text-center">Pilih</th>
