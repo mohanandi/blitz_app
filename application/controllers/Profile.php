@@ -58,21 +58,10 @@ class Profile extends CI_Controller
             $this->db->set('nama', $name);
             $this->db->where('email', $email);
             $this->db->update('user');
-
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Your profile has been updated!</div>');
             redirect('Profile');
         }
     }
-
-    // public function change_password()
-    // {
-    //     $data['judul'] = 'User Profile';
-    //     $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-    //     $data['data'] = $this->Profile_Model->check($this->session->userdata('id'));
-    //     $this->load->view('templates/header', $data);
-    //     $this->load->view('ubah_password', $data);
-    //     $this->load->view('templates/footer');
-    // }
 
     public function change_password()
     {

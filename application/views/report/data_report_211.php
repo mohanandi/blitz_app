@@ -20,6 +20,7 @@
                             <th class="text-center">Keterangan</th>
                             <th class="text-center">Tanggal Input</th>
                             <th class="text-center">Input By</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
