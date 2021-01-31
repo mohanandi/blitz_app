@@ -48,6 +48,11 @@
                             $this->db->where('id_jabatan_rptka', $penghubung_visa['id_jabatan']);
                             $query_jabatan = $this->db->get();
                             $data_jabatan = $query_jabatan->row_array();
+                            $this->db->select('nama');
+                            $this->db->from('user');
+                            $this->db->where('id', $data_visa['input_by_id']);
+                            $query_input = $this->db->get();
+                            $input_by = $query_input->row_array();
                         ?>
                             <tr>
                                 <td class="text-center"><?= $no; ?></td>
@@ -59,7 +64,7 @@
                                 <td class="text-center"><?= $data_rptka['no_rptka']; ?></td>
                                 <td class="text-center"><?= $data_jabatan['jabatan']; ?></td>
                                 <td class="text-center"><?= date('d-m-Y', $data_visa['tgl_input']); ?></td>
-                                <td class="text-center"><?= $data_visa['input_by_id']; ?></td>
+                                <td class="text-center"><?= $input_by['nama']; ?></td>
                                 <td class="text-center">
                                     <ul class="list-inline m-0">
                                         <li class="list-inline-item">

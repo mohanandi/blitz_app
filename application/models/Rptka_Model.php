@@ -149,4 +149,13 @@ class Rptka_Model extends CI_Model
         $this->db->where('id', $id_rptka);
         $this->db->update('rptka', $data);
     }
+    public function getLastRptka()
+    {
+        $last = $this->db->order_by('id', "desc")
+            ->select('id')
+            ->limit(1)
+            ->get('rptka')
+            ->row_array();
+        return $last;
+    }
 }

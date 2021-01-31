@@ -40,8 +40,10 @@ class Data_Rptka extends CI_Controller
             $this->load->view('templates/footer');
         } else {
             $this->Rptka_Model->TambahRptka();
-            $this->session->set_flashdata('flash', 'Ditambah');
-            redirect('Data_Rptka');
+            $rptka = $this->Rptka_Model->getLastRptka();
+            $id_rptka =  $rptka['id'];
+            $this->session->set_flashdata('flash', 'RPTKA berhasil Ditambah');
+            redirect("Data_Rptka/detail/$id_rptka");
         }
     }
     public function edit($id)
