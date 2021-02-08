@@ -35,12 +35,12 @@
                 <button id="filter" class="btn btn-primary btn-sm rounded-0 action-delete" type="button">Filter</button>
 
                 <?php if (set_value('sampai') && (set_value('nama_pt'))) : ?>
-                    <form class="btn-actions-pane-right mb-2 mr-2" action="<?= base_url('Export/export_voucher'); ?>" method="POST">
+                    <!-- <form class="btn-actions-pane-right mb-2 mr-2" action="<?= base_url('Export/export_voucher'); ?>" method="POST">
                         <input name="dari" id="dari" placeholder="Filter Dari" value="<?= set_value('dari'); ?>" type="hidden" class=" form-control">
                         <input name="sampai" id="sampai" value="<?= set_value('sampai'); ?>" type="hidden" class="form-control">
                         <input name="id_pt" id="id_pt" value="<?= set_value('nama_pt'); ?>" type="hidden" class="form-control">
                         <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Export"><i class="fa fa-download" aria-hidden="true"></i></button>
-                    </form>
+                    </form> -->
                 <?php endif; ?>
             </div>
             <div class="table-responsive" id="filter_box" style="padding: 20px;">
