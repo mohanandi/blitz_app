@@ -13,12 +13,28 @@ class Data_Rptka extends CI_Controller
     }
     public function index()
     {
-        $data['data_rptka'] = $this->Rptka_Model->getAllRptka();
-        $data['judul'] = 'Data RPTKA';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        $this->load->view('templates/header', $data);
-        $this->load->view('data_rptka/data_rptka', $data);
-        $this->load->view('templates/footer');
+        $this->form_validation->set_rules('dari', 'Dari', 'trim|required');
+        $this->form_validation->set_rules('sampai', 'Sampai', 'trim|required');
+        $this->form_validation->set_rules('nama_pt', 'Nama Perusahaan', 'trim|required');
+        if ($this->form_validation->run() == FALSE) {
+            $data['data_rptka'] = $this->Rptka_Model->getAllRptka();
+            $data['judul'] = 'Data RPTKA';
+            $data['data_pt'] = $this->DataPt_Model->getAllDataPt();
+            $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+            $this->load->view('templates/header', $data);
+            $this->load->view('data_rptka/data_rptka', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data['dari'] = strtotime($this->input->post('dari'));
+            $data['sampai'] = strtotime($this->input->post('sampai')) + (60 * 60 * 24);
+            $data['data_rptka'] = $this->Rptka_Model->getAllRptkaFilter($this->input->post('nama_pt'));
+            $data['judul'] = 'Data RPTKA';
+            $data['data_pt'] = $this->DataPt_Model->getAllDataPt();
+            $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+            $this->load->view('templates/header', $data);
+            $this->load->view('data_rptka/data_rptka', $data);
+            $this->load->view('templates/footer');
+        }
     }
     public function tambah()
     {

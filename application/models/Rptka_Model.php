@@ -11,6 +11,19 @@ class Rptka_Model extends CI_Model
     {
         return $this->db->get_where('rptka')->result_array();
     }
+
+    public function getAllRptkaFilter($id_pt)
+    {
+        $this->db->select('*');
+        $this->db->from('rptka');
+        if ($id_pt == 'Semua Perusahaan') {
+        } else {
+            $this->db->where('id_pt', $id_pt);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function getRptkaById($id)
     {
         return $this->db->get_where('rptka', ['id' => $id])->row_array();
