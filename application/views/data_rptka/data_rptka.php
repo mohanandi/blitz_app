@@ -5,13 +5,12 @@
                 <button id="filter" class="btn btn-primary btn-sm rounded-0" type="button">Filter</button>
 
                 <?php if (set_value('sampai') && (set_value('nama_pt'))) : ?>
-                    <!-- <form class="btn-actions-pane-right mb-2 mr-2" action="<?= base_url('Export/export_visa211'); ?>" method="POST">
+                    <form class="btn-actions-pane-right mb-2 mr-2" action="<?= base_url('Export/export_rptka_all'); ?>" method="POST">
                         <input name="dari" id="dari" placeholder="Filter Dari" value="<?= set_value('dari'); ?>" type="hidden" class=" form-control">
                         <input name="sampai" id="sampai" value="<?= set_value('sampai'); ?>" type="hidden" class="form-control">
                         <input name="id_pt" id="id_pt" value="<?= set_value('nama_pt'); ?>" type="hidden" class="form-control">
-                        <input name="id_visa" id="id_visa" value="<?= $data_jenis_visa['id']; ?>" type="hidden" class="form-control">
-                        <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Export <?= $data_jenis_visa['visa']; ?>"><i class="fa fa-download" aria-hidden="true"></i></button>
-                    </form> -->
+                        <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Export RPTKA"><i class="fa fa-download" aria-hidden="true"></i></button>
+                    </form>
                 <?php endif; ?>
             </div>
             <div class="table-responsive" id="filter_box" style="padding: 20px;">
@@ -75,7 +74,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">No</th>
-                            <th class="text-center">Nama PT</th>
+                            <th class="text-center">Nama Perusahaan</th>
                             <th class="text-center">Nomor RPTKA</th>
                             <th class="text-center">Tanggal Terbit</th>
                             <th class="text-center">Tanggal Expired</th>

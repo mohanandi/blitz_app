@@ -61,7 +61,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="position-relative form-group">
+                    <!-- <div class="position-relative form-group">
                         <label for="exampleAddress" class=""><b>Nama Perusahaan</b></label>
                         <select class="form-control" id="nama_pt" name="nama_pt">
                             <?php if (set_value('nama_pt')) :
@@ -81,7 +81,7 @@
                             <?php endforeach; ?>
                         </select>
                         <?= form_error('nama_pt'); ?>
-                    </div>
+                    </div> -->
                     <div class="position-relative row form-check">
                         <div class="right">
                             <button type="submit" class="btn btn-success">Filter</button>
@@ -169,48 +169,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 1;
-                        foreach ($data_pt as $pt) :
-                            $jumlah_tka = $this->db->from('tka')
-                                ->where('id_pt', $pt['id'])
-                                ->get()
-                                ->num_rows();
-                            $voucher_visa = $this->db->from('voucher_visa')
-                                ->where('id_pt', $pt['id'])
-                                ->get()
-                                ->num_rows();
-                            $voucher_entertaint = $this->db->from('voucher_entertaint')
-                                ->where('id_pt', $pt['id'])
-                                ->get()
-                                ->num_rows();
-                            $jumlah_voucher = $voucher_visa + $voucher_entertaint;
-                            $jumlah_rptka = $this->db->from('rptka')
-                                ->where('id_pt', $pt['id'])
-                                ->get()
-                                ->num_rows();
-                            $jumlah_visa211 = $this->db->from('penghubung_visa211')
-                                ->where('id_pt', $pt['id'])
-                                ->get()
-                                ->num_rows();
-                            $jumlah_visa312 = $this->db->from('penghubung_visa312')
-                                ->where('id_pt', $pt['id'])
-                                ->get()
-                                ->num_rows();
+                        <?php if (set_value('sampai')) {
+                        } else {
+                            $no = 1;
+                            foreach ($data_pt as $pt) :
+                                $jumlah_tka = $this->db->from('tka')
+                                    ->where('id_pt', $pt['id'])
+                                    ->get()
+                                    ->num_rows();
+                                $voucher_visa = $this->db->from('voucher_visa')
+                                    ->where('id_pt', $pt['id'])
+                                    ->get()
+                                    ->num_rows();
+                                $voucher_entertaint = $this->db->from('voucher_entertaint')
+                                    ->where('id_pt', $pt['id'])
+                                    ->get()
+                                    ->num_rows();
+                                $jumlah_voucher = $voucher_visa + $voucher_entertaint;
+                                $jumlah_rptka = $this->db->from('rptka')
+                                    ->where('id_pt', $pt['id'])
+                                    ->get()
+                                    ->num_rows();
+                                $jumlah_visa211 = $this->db->from('penghubung_visa211')
+                                    ->where('id_pt', $pt['id'])
+                                    ->get()
+                                    ->num_rows();
+                                $jumlah_visa312 = $this->db->from('penghubung_visa312')
+                                    ->where('id_pt', $pt['id'])
+                                    ->get()
+                                    ->num_rows();
                         ?>
-                            <tr>
-                                <td class="text-center text-muted"><?= $no; ?></td>
-                                <td class="text-center"><?= $pt['nama_pt']; ?></td>
-                                <td class="text-center"><?= $jumlah_tka; ?></td>
-                                <td class="text-center"><?= $jumlah_voucher; ?></td>
-                                <td class="text-center"><?= $jumlah_rptka; ?></td>
-                                <td class="text-center"><?= $jumlah_visa211; ?></td>
-                                <td class="text-center"><?= $jumlah_visa312; ?></td>
-                                <td class="text-center">
-                                    <a href="<?= base_url('Data_Pt/detail/') . $pt['id']; ?>" class="badge badge-success">Detail</a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="text-center text-muted"><?= $no; ?></td>
+                                    <td class="text-center"><?= $pt['nama_pt']; ?></td>
+                                    <td class="text-center"><?= $jumlah_tka; ?></td>
+                                    <td class="text-center"><?= $jumlah_voucher; ?></td>
+                                    <td class="text-center"><?= $jumlah_rptka; ?></td>
+                                    <td class="text-center"><?= $jumlah_visa211; ?></td>
+                                    <td class="text-center"><?= $jumlah_visa312; ?></td>
+                                    <td class="text-center">
+                                        <a href="<?= base_url('Data_Pt/detail/') . $pt['id']; ?>" class="badge badge-success">Detail</a>
+                                    </td>
+                                </tr>
                         <?php $no++;
-                        endforeach; ?>
+                            endforeach;
+                        } ?>
                     </tbody>
                 </table>
             </div>

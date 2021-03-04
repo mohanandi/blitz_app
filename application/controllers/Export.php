@@ -1395,4 +1395,148 @@ class Export extends CI_Controller
 
         $writer->save('php://output');
     }
+
+    public function export_rptka_all()
+    {
+        $dari = strtotime($this->input->post('dari'));
+        $sampai = strtotime($this->input->post('sampai')) + (60 * 60 * 24);
+        $id_pt = $this->input->post('id_pt');
+
+        $this->db->select('*');
+        $this->db->from('rptka');
+        if ($id_pt == 'Semua Perusahaan') {
+            $this->db->where('tgl_input >=', $dari);
+            $this->db->where('tgl_input <=', $sampai);
+        } else {
+            $this->db->where('id_pt', $id_pt);
+            $this->db->where('tgl_input >=', $dari);
+            $this->db->where('tgl_input <=', $sampai);
+        }
+        $query = $this->db->get();
+        $data_rptka = $query->result_array();
+
+        $judul = "Report RPTKAs";
+
+        $spreadsheet = new Spreadsheet;
+
+        // Settingan awal fil excel
+        $spreadsheet->getProperties()->setCreator('')
+            ->setLastModifiedBy('')
+            ->setTitle("RPTKA")
+            ->setSubject("RPTKA")
+            ->setDescription("RPTKA")
+            ->setKeywords("RPTKA");
+
+        // Buat sebuah variabel untuk menampung pengaturan style dari header tabel
+        $style_col = array(
+            'font' => array('bold' => true), // Set font nya jadi bold
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+            ),
+            'borders' => array(
+                'top' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN), // Set border top dengan garis tipis
+                'right' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),  // Set border right dengan garis tipis
+                'bottom' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN), // Set border bottom dengan garis tipis
+                'left' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN) // Set border left dengan garis tipis
+            )
+        );
+
+        // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
+        $style_row = array(
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+            ),
+            'borders' => array(
+                'top' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN), // Set border top dengan garis tipis
+                'right' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN),  // Set border right dengan garis tipis
+                'bottom' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN), // Set border bottom dengan garis tipis
+                'left' => array('style'  => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN) // Set border left dengan garis tipis
+            )
+        );
+
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('A1', "REPORT RPTKA"); // Set kolom A1 dengan tulisan "DATA SISWA"
+        $spreadsheet->getActiveSheet()->mergeCells('A1:K1'); // Set Merge Cell pada kolom A1 sampai F1
+        $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
+        $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
+        $spreadsheet->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+
+        // Buat header tabel nya pada baris ke 3
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('A3', "NO"); // Set kolom A3 dengan tulisan "NO"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('B3', "NAMA PERUSAHAAN"); // Set kolom C3 dengan tulisan "NAMA"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('C3', "NO RPTKA"); // Set kolom B3 dengan tulisan "NIS"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('D3', "TANGGAL TERBIT"); // Set kolom C3 dengan tulisan "NAMA"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('E3', "TANGGAL EXPIRED"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('F3', "JUMLAH RPTKA"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('G3', "RPTKA TERPAKAI"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('H3', "KETERANGAN"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('I3', "TANGGAL INPUT"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue('J3', "INPUT BY"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+
+        // Apply style header yang telah kita buat tadi ke masing-masing kolom header
+        $spreadsheet->getActiveSheet()->getStyle('A3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('B3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('C3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('D3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('E3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('F3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('G3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('H3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('I3')->applyFromArray($style_col);
+        $spreadsheet->getActiveSheet()->getStyle('J3')->applyFromArray($style_col);
+
+        // Set height baris ke 1, 2 dan 3
+        $spreadsheet->getActiveSheet()->getRowDimension('1')->setRowHeight(20);
+        $spreadsheet->getActiveSheet()->getRowDimension('2')->setRowHeight(20);
+        $spreadsheet->getActiveSheet()->getRowDimension('3')->setRowHeight(20);
+
+        $numrow = 4; // Set baris pertama untuk isi tabel adalah baris ke 4
+        $no = 1;
+        foreach ($data_rptka as $rptka) :
+            $data_pt = $this->db->select('nama_pt')->get_where('pt', ['id' => $rptka['id_pt']])->row_array();
+            $data_user = $this->db->select('nama')->get_where('user', ['id' => $rptka['input_by_id']])->row_array();
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $no);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('B' . $numrow, $data_pt['nama_pt']);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $rptka['no_rptka']);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('D' . $numrow, date('d-m-Y', $rptka['tgl_terbit']));
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('E' . $numrow, date('d-m-Y', $rptka['tgl_expired']));
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $rptka['jumlah_rptka']);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('G' . $numrow, $rptka['jumlah_terpakai']);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('H' . $numrow, $rptka['ket']);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('I' . $numrow, $data_user['nama']);
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('J' . $numrow, date('d-m-Y', $rptka['tgl_input']));
+            $no++;
+            $numrow++;
+        endforeach;
+
+        // Set width kolom
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5); // Set width kolom A
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(20); // Set width kolom B
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(25); // Set width kolom C
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(15); // Set width kolom D
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(20); // Set width kolom D
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(20); // Set width kolom D
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(20); // Set width kolom D
+        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(25); // Set width kolom D
+        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(20); // Set width kolom D
+        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(24); // Set width kolom D
+
+        // Set orientasi kertas jadi LANDSCAPE
+        $spreadsheet->getActiveSheet()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+
+        // Set judul file excel nya
+        $spreadsheet->getActiveSheet(0)->setTitle("Data RPTKA");
+        $spreadsheet->setActiveSheetIndex(0);
+
+        $writer = new Xlsx($spreadsheet);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename=' . $judul . '.xlsx');
+        header('Cache-Control: max-age=0');
+
+        $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, 'My Data');
+
+        $writer->save('php://output');
+    }
 }
