@@ -62,12 +62,12 @@
                                 $this->db->where('id', $tka['id_tka']);
                                 $query = $this->db->get();
                                 $data_tka = $query->row_array();
-                                $this->db->select('id_penghubung_visa211');
+                                $this->db->select(array('id_penghubung_visa211', 'status'));
                                 $this->db->from('penghubung_visa211');
                                 $this->db->where(array('id_jenis_visa' => $data_jenis_visa['id'], 'id_tka' => $tka['id_tka']));
                                 $query = $this->db->get();
-                                $check_visa = $query->result();
-                                if ($check_visa) :
+                                $check_visa = $query->row_array();
+                                if ($check_visa['status'] == 'Aktif') :
                                 else :
                                     $pt = $this->db->select('nama_pt')->get_where('pt', ['id' => $data_tka['id_pt']])->row_array();
                                     if ($check_pt) :
@@ -113,12 +113,12 @@
                                 $this->db->where('id', $tka['id']);
                                 $query = $this->db->get();
                                 $data_tka = $query->row_array();
-                                $this->db->select('id_penghubung_visa211');
+                                $this->db->select(array('id_penghubung_visa211', 'status'));
                                 $this->db->from('penghubung_visa211');
                                 $this->db->where(array('id_jenis_visa' => $data_jenis_visa['id'], 'id_tka' => $tka['id']));
                                 $query = $this->db->get();
-                                $check_visa = $query->result();
-                                if ($check_visa) :
+                                $check_visa = $query->row_array();
+                                if ($check_visa['status'] == 'Aktif') :
                                 else : ?>
                                     <tr>
                                         <td class="text-center"><?= $no; ?></td>
