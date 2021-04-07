@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'db_blitz_live',
+	'hostname' => 'app.blitzindoutama.com',
+	'username' => 'u6770170_blitz_baru',
+	'password' => 'Tukangsomay24_',
+	'database' => 'u6770170_blitz_baru',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
