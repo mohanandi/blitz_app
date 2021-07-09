@@ -17,6 +17,7 @@ class Data_Visa_Model extends CI_Model
         $this->db->from('penghubung_visa211');
         $this->db->where('id_jenis_visa', $this->input->post('id_visa'));
         $this->db->where('id_tka', $this->input->post('id_tka'));
+        $this->db->where('status', 'Aktif');
         $query = $this->db->get();
         return $query->row_array();
     }
